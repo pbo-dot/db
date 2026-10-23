@@ -2,6 +2,7 @@
 
 En lille optager-app til [Dagbog](https://github.com/pbo-dot/dagbog). Sort skærm med et ur (klokkeslæt og dato) og en lille prik i toppen: grå = optager ikke, blå = optager.
 
+- Hold fingeren på skærmen for at vælge baggrund: ur, sort eller eget billede (fx et screenshot af hjemmeskærmen). Billedet gemmes kun i appen.
 - Optagelsen starter, når appen åbnes, og stopper ved et tryk på skærmen, eller når appen forlades.
 - Talen bliver til tekst med telefonens talegenkendelse (Chrome). Teksten vises aldrig.
 - Teksten krypteres med Dagbogs offentlige nøgle (RSA-OAEP + AES-GCM) og lægges i Dagbogs indbakke i samme browserlager (begge ligger på pbo-dot.github.io). Kun Dagbog kan læse den, når den er låst op.

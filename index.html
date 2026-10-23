@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#000000" />
     <meta name="referrer" content="no-referrer" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self'; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob:; connect-src 'self'; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="icon" type="image/png" href="./icon-192.png" />
     <title>DB</title>
@@ -18,13 +18,37 @@
       #clock { position: fixed; top: 38%; left: 0; right: 0; text-align: center; color: #6b7280; }
       #time { font-weight: 200; font-size: min(24vw, 120px); letter-spacing: .02em; font-variant-numeric: tabular-nums; line-height: 1; }
       #date { margin-top: 10px; font-size: 16px; }
+      #bg { position: fixed; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top; display: none; }
+      body.bg-image #bg { display: block; }
+      body.bg-image #clock, body.bg-black #clock { display: none; }
+      body.bg-image #dot { box-shadow: 0 0 0 2px rgba(255, 255, 255, .6); z-index: 1; }
+      #sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 2; background: #1f2937; color: #e5e7eb; padding: 18px 18px calc(env(safe-area-inset-bottom, 0px) + 18px); border-radius: 18px 18px 0 0; display: none; font-size: 16px; cursor: default; }
+      #sheet.open { display: block; }
+      #sheet h2 { font-size: 15px; font-weight: 600; margin: 0 0 12px; color: #9ca3af; }
+      #sheet .opts { display: flex; gap: 10px; flex-wrap: wrap; }
+      #sheet button { flex: 1; min-width: 90px; padding: 14px 10px; border-radius: 12px; border: 1px solid #374151; background: #111827; color: #e5e7eb; font-size: 15px; }
+      #sheet button.on { border-color: #1d4ed8; background: #1e3a8a; }
+      #sheet .close { margin-top: 12px; width: 100%; background: transparent; border-color: transparent; color: #9ca3af; }
+      #sheet p { font-size: 13px; color: #9ca3af; margin: 12px 0 0; }
       #msg { position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 28px); left: 0; right: 0; text-align: center; padding: 0 24px; }
     </style>
   </head>
   <body>
+    <img id="bg" alt="" />
     <div id="dot" role="img" aria-label="Optager ikke"></div>
     <div id="clock"><div id="time"></div><div id="date"></div></div>
     <div id="msg" aria-live="polite"></div>
+    <div id="sheet" role="dialog" aria-label="Baggrund">
+      <h2>Baggrund</h2>
+      <div class="opts">
+        <button data-bg="clock">Ur</button>
+        <button data-bg="black">Sort</button>
+        <button data-bg="image">Eget billede</button>
+      </div>
+      <p>Eget billede kan fx være et screenshot af din hjemmeskærm.</p>
+      <button class="close">Luk</button>
+      <input id="file" type="file" accept="image/*" hidden />
+    </div>
     <script type="module" src="./app.js"></script>
   </body>
 </html>

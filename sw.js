@@ -1,5 +1,5 @@
 // Gemmer appens egne filer, så den starter hurtigt. Nyeste udgave hentes, når der er net.
-const CACHE = 'db-v2';
+const CACHE = 'db-v3';
 const FILES = ['./', './index.html', './app.js', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 
 self.addEventListener('install', (e) => {

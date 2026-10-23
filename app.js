@@ -193,10 +193,98 @@ async function start() {
   );
 }
 
-document.body.addEventListener('click', () => {
+// ---------- Baggrund: ur, sort eller eget billede (hold fingeren på skærmen) ----------
+
+const sheet = document.getElementById('sheet');
+const file = document.getElementById('file');
+const bgImg = document.getElementById('bg');
+let bgUrl = null;
+
+/** Billedet gemmes i appens egen database, ikke i dagbogens. */
+function kv(mode, fn) {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('db-app', 1);
+    req.onupgradeneeded = () => req.result.createObjectStore('kv');
+    req.onerror = () => reject(req.error);
+    req.onsuccess = () => {
+      const r = fn(req.result.transaction('kv', mode).objectStore('kv'));
+      r.onsuccess = () => resolve(r.result);
+      r.onerror = () => reject(r.error);
+    };
+  });
+}
+
+function getBgMode() {
+  try {
+    return localStorage.getItem('db-bg') || 'clock';
+  } catch {
+    return 'clock';
+  }
+}
+
+async function applyBg(mode) {
+  if (mode === 'image') {
+    const blob = await kv('readonly', (s) => s.get('bg')).catch(() => null);
+    if (!blob) mode = 'clock';
+    else {
+      if (bgUrl) URL.revokeObjectURL(bgUrl);
+      bgUrl = URL.createObjectURL(blob);
+      bgImg.src = bgUrl;
+    }
+  }
+  document.body.classList.toggle('bg-image', mode === 'image');
+  document.body.classList.toggle('bg-black', mode === 'black');
+  for (const b of sheet.querySelectorAll('[data-bg]')) b.classList.toggle('on', b.dataset.bg === mode);
+  try {
+    localStorage.setItem('db-bg', mode);
+  } catch {
+    // ikke afgørende
+  }
+}
+
+sheet.addEventListener('click', async (e) => {
+  e.stopPropagation();
+  const b = e.target.closest('button');
+  if (!b) return;
+  if (b.classList.contains('close')) sheet.classList.remove('open');
+  else if (b.dataset.bg === 'image') file.click();
+  else {
+    await applyBg(b.dataset.bg);
+    sheet.classList.remove('open');
+  }
+});
+
+file.addEventListener('change', async () => {
+  const f = file.files?.[0];
+  file.value = '';
+  if (!f) return;
+  await kv('readwrite', (s) => s.put(f, 'bg'));
+  await applyBg('image');
+  sheet.classList.remove('open');
+});
+
+// Et kort tryk starter/stopper; hold fingeren nede for at vælge baggrund.
+let pressTimer;
+let longPress = false;
+document.body.addEventListener('pointerdown', (e) => {
+  if (sheet.contains(e.target)) return;
+  longPress = false;
+  pressTimer = setTimeout(() => {
+    longPress = true;
+    sheet.classList.add('open');
+  }, 700);
+});
+for (const ev of ['pointerup', 'pointercancel', 'pointerleave']) document.body.addEventListener(ev, () => clearTimeout(pressTimer));
+document.body.addEventListener('contextmenu', (e) => e.preventDefault());
+
+document.body.addEventListener('click', (e) => {
+  if (longPress || sheet.contains(e.target)) return;
+  if (sheet.classList.contains('open')) return sheet.classList.remove('open');
   if (stop) stop();
   else start();
 });
+
+applyBg(getBgMode());
 
 // Forlades appen, stoppes og gemmes. Åbnes den igen (tryk på ikonet), startes en ny optagelse.
 document.addEventListener('visibilitychange', () => {
