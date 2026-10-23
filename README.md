@@ -1,6 +1,6 @@
 # DB
 
-En lille optager-app til [Dagbog](https://github.com/pbo-dot/dagbog). Hvid skærm med en lille prik i toppen: grå = optager ikke, blå = optager.
+En lille optager-app til [Dagbog](https://github.com/pbo-dot/dagbog). Sort skærm med et ur (klokkeslæt og dato) og en lille prik i toppen: grå = optager ikke, blå = optager.
 
 - Optagelsen starter, når appen åbnes, og stopper ved et tryk på skærmen, eller når appen forlades.
 - Talen bliver til tekst med telefonens talegenkendelse (Chrome). Teksten vises aldrig.

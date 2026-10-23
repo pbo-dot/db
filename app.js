@@ -1,4 +1,4 @@
-// DB: optager-app til Dagbog. Hvid skærm med en lille prik i toppen:
+// DB: optager-app til Dagbog. Sort skærm med et ur og en lille prik i toppen:
 // grå = optager ikke, blå = optager. Optagelsen starter, når appen åbnes,
 // og stopper ved et tryk på skærmen eller når appen forlades.
 //
@@ -203,6 +203,17 @@ document.addEventListener('visibilitychange', () => {
   if (document.hidden) stop?.();
   else start();
 });
+
+// Uret: klokkeslæt og dato, så skærmen ligner et ur på bordet.
+const time = document.getElementById('time');
+const date = document.getElementById('date');
+function tick() {
+  const now = new Date();
+  time.textContent = now.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
+  date.textContent = now.toLocaleDateString('da-DK', { weekday: 'long', day: 'numeric', month: 'long' });
+}
+tick();
+setInterval(tick, 10_000);
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
 
