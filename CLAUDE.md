@@ -8,6 +8,7 @@ DB er en lille, neutral optager-app (PWA, 😀-ikon) til eget brug: https://pbo-
 
 ## Arbejdsform med ejeren
 
+- **Nye, ukendte funktioner:** Skriv ikke fra bunden først. Undersøg kendte løsninger (open source-projekter på GitHub, velholdte biblioteker og officiel dokumentation), sammenlign kort 2–3 fremgangsmåder i forslaget til ejeren, og vælg den mest gennemprøvede. Brug kun kode med åben licens, og hold appen let.
 - Skriv på dansk, kort og i almindeligt sprog. Ejeren er ikke programmør.
 - Nye funktioner drøftes og godkendes, før de bygges. Fejlrettelser må laves med det samme.
 - Læg ændringer direkte på `main`. Husk at hæve cache-navnet i `sw.js`, når filer ændres.
